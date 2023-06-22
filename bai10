@@ -61,3 +61,13 @@ int main()
     cout<<endl;
     return 0;
 }
+//===dinh nghia ham===
+float tinhTien(MatHang *a,int n)
+{
+    float tongTien=0;
+
+    for(int i=0;i<n;i++)
+        tongTien += a[i].soLuong * a[i].donGia;
+
+    return tongTien;
+}
