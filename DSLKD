@@ -1,0 +1,148 @@
+Bài 32(lthdtbai32.cpp): Cho tệp văn bản "daysonguyen-bai32.txt" chứa dãy số nguyên,
+trên tệp không có thông tin về số phần tử của dãy số. Đọc dãy số từ tệp văn bản,
+lưu dãy số trong danh sách liên kết đơn theo đúng thứ tự trên tệp.
+Đưa dãy số trong DSLKD ra màn hình. Tìm xem trong dãy số có phần tử nào bằng x không.
+Xóa một phần tử có giá trị bằng x.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong DSLKD
+class SList
+{
+    private:
+        struct node
+        {
+            int infor;
+            node *link;
+        } *F;
+
+    public:
+        SList();
+        ~SList();
+        void lastInsert(int x);
+        void display();
+        bool search(int x);
+        bool remove(int x);
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 1 doi tuong DSLKD
+    SList list;
+
+    //Tao doi tuong tep doc vao
+    ifstream fin("daysonguyen-bai32.txt");
+
+    //Khai bao bien
+    int x;
+
+    //Doc ca day so tu tep vao DSLLK
+    while(fin>>x) list.lastInsert(x);
+
+    //Dua ra
+    cout<<"Dãy số trong DSLKD là:\n";
+    list.display();
+
+    //Tim va xoa phan tu bang x
+    cout<<"\n\nNhập vào giá trị của x: ";
+    cin>>x;
+
+    if(list.search(x))
+    {
+        //Xoa x
+        list.remove(x);
+
+        //Dua ra DSLKD
+        cout<<"\nDãy số trong DSLKD sau khi xóa phần tử bằng "<<x<<":\n";
+        list.display();
+    }
+    else cout<<"\nTrong DSLKD không có phần tử bằng "<<x;
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+SList::SList():F(NULL)
+{
+
+}
+
+SList::~SList()
+{
+    while(F)
+    {
+        node *P=F;
+        F = F->link;
+        delete P;
+    }
+}
+
+void SList::lastInsert(int x)
+{
+    //Tao nut moi chua x
+    node *N = new node;
+    N->infor = x;
+    N->link = NULL;
+
+    //Noi nut moi vao cuoi DSLKD
+    if(F==NULL) F = N;
+    else
+    {
+        //Tim den nut cuoi,P
+        node *P=F;
+        while(P->link) P = P->link;
+
+        //Noi nut moi vao sau nut cuoi
+        P->link = N;
+    }
+}
+
+void SList::display()
+{
+    node *P=F;
+    while(P)
+    {
+        cout<<P->infor<<"  ";
+        P = P->link;
+    }
+}
+
+bool SList::search(int x)
+{
+    //Tim x
+    node *P=F;
+    while(P)
+        if(P->infor==x) return 1;
+        else P = P->link;
+
+    //Khong thay phan tu bang x
+    return 0;
+}
+
+bool SList::remove(int x)
+{
+    //Tim nut M co phan tu bang x va nut P truoc nut M
+    node *M=F,*P;
+    while(M)
+        if(M->infor==x) break;
+        else
+        {
+            P = M;
+            M = M->link;
+        }
+
+    //Neu khong tim thay nut co phan tu bang x
+    if(M==NULL) return 0;
+
+    //Xoa nut M
+    P->link = M->link;
+    delete M;
+
+    //Da xoa
+    return 1;
+}
