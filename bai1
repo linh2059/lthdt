@@ -1,0 +1,53 @@
+Bài 01(lthdtbai01.cpp): Tính diện tích và chu vi hình tam giác có 3 cạnh a,b,c. Ba cạnh a,b,c đọc vào
+từ tệp văn bản "tamgiac.txt". Đưa kết quả ra màn hình, đồng thời ghi ra tệp văn bản "ketqua-lthdtbai01.txt".
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+#include<math.h>
+
+using namespace std;
+
+//===chuong trinh chinh===
+int main()
+{
+    //Khai bao tep vao, ra
+    ifstream fin("tamgiac.txt");
+    ofstream fout("ketqua-lthdtbai01.txt");
+
+    //Khai bao bien
+    float a,b,c;
+
+    //Doc 3 canh tam giac tu tep
+    fin>>a>>b>>c;
+
+    //Kiem tra hop le va tinh dt,cv
+    if(a+b>c && a+c>b && b+c>a)
+    {
+        float cv = a+b+c;
+        float p = cv/2;
+        float dt = sqrt(p*(p-a)*(p-b)*(p-c));
+
+        printf("Tam giac co 3 canh la: a= %0.1f; b= %0.1f; c= %0.1f",a,b,c);
+        printf("\nDien tich tam giac la: %0.1f",dt);
+        printf("\nChu vi tam giac la: %0.1f",cv);
+
+        //Ghi ra tep
+        fout<<"Tam giac co 3 canh la: a= "<<a<<"; b= "<<b<<"; c= "<<c;
+        fout<<"\nDien tich tam giac la: "<<dt;
+        fout<<"\nChu vi tam giac la: "<<cv;
+    }
+    else
+    {
+        cout<<"3 so tren tep khong phai 3 canh tam giac.";
+
+        //Ghi ra tep
+        fout<<"3 so tren tep khong phai 3 canh tam giac.";
+    }
+
+    cout<<"\n\nKet qua cung da ghi ra tep ketqua-lthdtbai01.txt";
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
