@@ -1,0 +1,2038 @@
+Bài 01(lthdtbai01.cpp): Tính diện tích và chu vi hình tam giác có 3 cạnh a,b,c. Ba cạnh a,b,c đọc vào
+từ tệp văn bản "tamgiac.txt". Đưa kết quả ra màn hình, đồng thời ghi ra tệp văn bản "ketqua-lthdtbai01.txt".
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+#include<math.h>
+
+using namespace std;
+
+//===chuong trinh chinh===
+int main()
+{
+    //Khai bao tep vao, ra
+    ifstream fin("tamgiac.txt");
+    ofstream fout("ketqua-lthdtbai01.txt");
+
+    //Khai bao bien
+    float a,b,c;
+
+    //Doc 3 canh tam giac tu tep
+    fin>>a>>b>>c;
+
+    //Kiem tra hop le va tinh dt,cv
+    if(a+b>c && a+c>b && b+c>a)
+    {
+        float cv = a+b+c;
+        float p = cv/2;
+        float dt = sqrt(p*(p-a)*(p-b)*(p-c));
+
+        printf("Tam giac co 3 canh la: a= %0.1f; b= %0.1f; c= %0.1f",a,b,c);
+        printf("\nDien tich tam giac la: %0.1f",dt);
+        printf("\nChu vi tam giac la: %0.1f",cv);
+
+        //Ghi ra tep
+        fout<<"Tam giac co 3 canh la: a= "<<a<<"; b= "<<b<<"; c= "<<c;
+        fout<<"\nDien tich tam giac la: "<<dt;
+        fout<<"\nChu vi tam giac la: "<<cv;
+    }
+    else
+    {
+        cout<<"3 so tren tep khong phai 3 canh tam giac.";
+
+        //Ghi ra tep
+        fout<<"3 so tren tep khong phai 3 canh tam giac.";
+    }
+
+    cout<<"\n\nKet qua cung da ghi ra tep ketqua-lthdtbai01.txt";
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+
+Bài 04(lthdtbai04.cpp): Tính tổng 2 ma trận nguyên có kích thước mxn, Cmxn = Amxn + Bmxn.
+Đưa các ma trận ra màn hình theo định dạng hàng, cột. Y/c sử dụng mảng động
+chứa các ma trận. Các ma trận đọc vào từ tệp văn bản: "matran-A.txt" và "matran-B.txt".
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+void docTepMT(int* &X,int &m,int &n,const char *tenTep);
+void duaRaMT(int *X,int m,int n);
+int* congMT(int *A,int *B,int m,int n);
+
+//===chuong trinh chinh===
+int main()
+{
+    //Khai bao bien
+    int *A,*B,*C;
+    int mA,nA,mB,nB;
+
+    //Doc ma tran A,B tu tep
+    docTepMT(A,mA,nA,"matran-A.txt");
+    docTepMT(B,mB,nB,"matran-B.txt");
+
+    //Dua ra
+    cout<<"Ma tran A la:\n";
+    duaRaMT(A,mA,nA);
+    cout<<"\n\nMa tran B la:\n";
+    duaRaMT(B,mB,nB);
+
+    //Kiem tra dieu kien de cong 2 ma tran
+    if(mA==mB && nA==nB)
+    {
+        C = congMT(A,B,mA,nA);
+        cout<<"\n\nMa tran tong C = A + B la:\n";
+        duaRaMT(C,mB,nB);
+    }
+    else cout<<"\n\nHai ma tran khong cung kich thuoc, khong cong duoc.";
+
+    //Huy cac mang dong
+    delete [] A;
+    delete [] B;
+    delete [] C;
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+void docTepMT(int* &X,int &m,int &n,const char *tenTep)
+{
+    //Khai bao tep doc vao
+    ifstream fin(tenTep);
+
+    //Doc so hang, so cot cua ma tran tu tep
+    fin>>m>>n;
+
+    //Tao mang dong co mxn o nho de chua ma tran
+    X = new int[m*n];
+
+    //Doc ma tran tu tep vao mang dong X
+    for(int i=1;i<=m;i++)
+        for(int j=1;j<=n;j++)
+        {
+            int k = (i-1)*n + j - 1;
+            fin>>X[k];
+        }
+}
+
+void duaRaMT(int *X,int m,int n)
+{
+    for(int i=1;i<=m;i++)
+    {
+        //Dua ra hang i
+        for(int j=1;j<=n;j++)
+        {
+            int k = (i-1)*n + j - 1;
+            printf("%6d",X[k]);
+        }
+        //Xuong dong
+        cout<<endl;
+    }
+}
+
+int* congMT(int *A,int *B,int m,int n)
+{
+    //Tao mang dong C co mxn o nho de chua ma tran tong
+    int *C = new int[m*n];
+
+    //Cong 2 ma tran
+    for(int i=1;i<=m;i++)
+        for(int j=1;j<=n;j++)
+        {
+            int k = (i-1)*n + j - 1;
+            C[k] = A[k] + B[k];
+        }
+
+    //Tra ve ma tran tong
+    return C;
+}
+
+Bài 09(lthdtbai09.cpp):Sắp xếp danh sách n họ tên theo vần ABC,
+nếu trùng tên thì sắp xếp theo họ, nếu trùng cả họ thì sắp xếp theo tên đệm.
+Danh sách họ tên đọc vào từ tệp văn bản "dsten.txt", danh sách tên đã sắp xếp ghi ra
+tệp văn bản "ketqua-lthdtbai09.txt". Y/c viết 1 hàm đưa ra danh sách tên, 1 hàm sắp xếp danh sách
+tên và 1 hàm hoán đổi nội dung 2 biến xâu chứa tên.
+*/
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+
+using namespace std;
+
+void duaRaDS(char **ds,int n);
+void sapXepDS(char **ds,int n);
+void doiCho(char *s1,char *s2);
+
+//===chuong trinh chinh===
+int main()
+{
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+void duaRaDS(char **ds,int n)
+{
+
+}
+
+void sapXepDS(char **ds,int n)
+{
+
+}
+
+void doiCho(char *s1,char *s2)
+{
+    char tg[31];
+
+    strcpy(tg,s1);
+    strcpy(s1,s2);
+    strcpy(s2,tg);
+}
+
+Bài 10(lthdtbai10.cpp):Nhập vào một danh sách n mặt hàng; mỗi mặt hàng
+có tên hàng, số lượng, đơn giá.Tính tổng tiền của n mặt hàng.
+Y/c viết hàm nhận vào danh sách n mặt hàng, tính và trả về tổng tiền.
+Yêu cầu thêm: Danh sách n mặt hàng không nhập từ bàn phím mà đọc vào từ tệp "mathang.txt".
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao kieu cau truc mat hang
+struct MatHang
+{
+    char tenHang[31];
+    int soLuong;
+    float donGia;
+};
+
+//Khai bao ham
+float tinhTien(MatHang *a,int n);
+
+//===chuong trinh chinh===
+int main()
+{
+    //Khai bao tep doc vao
+    ifstream fin("mathang.txt");
+
+    //Khai bao bien
+    int n;
+    char tg[2];
+
+    //Doc so luong mat hang tu tep
+    fin>>n;
+
+    //Tao mang dong a co n o nho de chua danh sach mat hang
+    MatHang *a = new MatHang[n];
+
+    //Doc danh sach mat hang tu tep vao mang dong a
+    cout<<"Danh sach mat hang doc duoc tu tep la:";
+    for(int i=0;i<n;i++)
+    {
+        //Doc ky tu Enter de dua con tro tep xuong dong duoi
+        fin.getline(tg,sizeof(tg));
+
+        //Doc cac thong tin cua mat hang i
+        fin.getline(a[i].tenHang,sizeof(a[i].tenHang),'\t');
+        fin>>a[i].soLuong>>a[i].donGia;
+
+        //Dua mat hang i ra man hinh
+        cout<<"\nMat hang thu "<<i+1<<":";
+        cout<<"\n\tTen hang: "<<a[i].tenHang;
+        cout<<"\n\tSo luong: "<<a[i].soLuong;
+        cout<<"\n\tDon gia: "<<a[i].donGia;
+        cout<<"\n\tThanh tien: "<<a[i].soLuong * a[i].donGia;
+        cout<<endl;
+    }
+
+    printf("\nTong tien cua %d mat hang la: %0.1f",n,tinhTien(a,n));
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+float tinhTien(MatHang *a,int n)
+{
+    float tongTien=0;
+
+    for(int i=0;i<n;i++)
+        tongTien += a[i].soLuong * a[i].donGia;
+
+    return tongTien;
+}
+Bài 15(lthdtbai15.cpp): Tính diện tích và chu vi hình tam giác có 3 cạnh a,b,c. Ba cạnh a,b,c có thể nhập vào
+từ bàn phím hoặc từ tệp văn bản.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+#include<math.h>
+
+using namespace std;
+
+//Khai bao lop tam giac
+class TamGiac
+{
+    private:
+        float a,b,c;
+
+    public:
+        void nhap();
+        void docTep(const char *tenTep);
+        float tinhDT();
+        float tinhCV();
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 1 doi tuong tam giac
+    TamGiac tg;
+
+    tg.nhap();
+    //tg.docTep("tamgiac.txt");
+
+    printf("Dien tich tam giac la: %0.1f",tg.tinhDT());
+    printf("\nChu vi tam giac la: %0.1f",tg.tinhCV());
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+void TamGiac::nhap()
+{
+    do
+    {
+        cout<<"Nhap vao 3 canh cua tam giac: ";
+        cin>>a>>b>>c;
+
+        if(a+b<=c || a+c<=b || b+c<=a)
+            cout<<"3 so da nhap khong phai 3 canh tam giac. Nhap lai.\n";
+    }
+    while(a+b<=c || a+c<=b || b+c<=a);
+}
+
+void TamGiac::docTep(const char *tenTep)
+{
+    //Khai bao tep doc vao
+    ifstream fin(tenTep);
+
+    //Doc vao 3 canh
+    fin>>a>>b>>c;
+
+    if(a+b<=c || a+c<=b || b+c<=a)
+        cout<<"3 so doc tu tep khong phai 3 canh tam giac.";
+}
+
+float TamGiac::tinhDT()
+{
+    float p=(a+b+c)/2;
+
+    return sqrt(p*(p-a)*(p-b)*(p-c));
+}
+
+float TamGiac::tinhCV()
+{
+    return a+b+c;
+}
+
+Bài 16(lthdtbai16.cpp): Đọc vào bán kính và màu nền (Xanh, Đỏ, Tím, Vàng) của n hình tròn
+từ tệp văn bản "hinhtron.txt". Đưa ra màn hình bán kính, màu nền, diện tích và chu vi
+của các hình tròn. Tính tổng diện tích và chu vi của n hình tròn.
+Đếm số lượng hình tròn có nền màu Xanh, Đỏ, Tím, Vàng.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+#include<string.h>
+
+using namespace std;
+
+//Khai bao lop hinh tron
+class HinhTron
+{
+    private:
+        float r;
+        char mauNen[7];
+
+    public:
+        void thietLapR(float r);
+        void thietLapMauNen(const char *mauNen);
+        void hien();
+        float tinhDT();
+        float tinhCV();
+        int layMaMau();
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao doi tuong tep vao
+    ifstream fin("hinhtron.txt");
+
+    //Khai bao bien
+    int n;
+    float r,tongDT=0,tongCV=0;
+    char mauNen[7];
+    int dem[4]={0};
+
+    //Doc so luong hinh tron tu tep
+    fin>>n;
+
+    //Tao mang dong a co n doi tuong hinh tron
+    HinhTron *a = new HinhTron[n];
+
+    //Doc ban kinh va mau nen cua n hinh tron tu tep vao n doi tuong hinh tron
+    for(int i=0;i<n;i++)
+    {
+        //Doc bk va mau nen tu tep
+        fin>>r>>mauNen;
+
+        //Dua bk va mau nen vao doi tuong
+        a[i].thietLapR(r);
+        a[i].thietLapMauNen(mauNen);
+    }
+
+    //Dua ra man hinh thong tin cua n hinh tron, tinh tong dt,cv va dem
+    cout<<"Danh sach cac hinh tron la:";
+    for(int i=0;i<n;i++)
+    {
+        cout<<"\nHinh tron thu "<<i+1<<":\n";
+        a[i].hien();
+        cout<<endl;
+
+        //Tinh tong DT,CV
+        tongDT += a[i].tinhDT();
+        tongCV += a[i].tinhCV();
+
+        //Dem so hinh tron theo mau
+        dem[a[i].layMaMau()]++;
+    }
+
+    printf("\nTong dien tich cua %d hinh tron la: %0.1f",n,tongDT);
+    printf("\nTong chu vi cua %d hinh tron la: %0.1f",n,tongCV);
+    cout<<"\nSo luong hinh tron theo cac mau la:";
+    cout<<"\n  Xanh: "<<dem[0];
+    cout<<"\n  Đỏ: "<<dem[1];
+    cout<<"\n  Tím: "<<dem[2];
+    cout<<"\n  Vàng: "<<dem[3];
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+void HinhTron::thietLapR(float r)
+{
+    this->r = r;
+}
+
+void HinhTron::thietLapMauNen(const char *mauNen)
+{
+    strcpy(this->mauNen,mauNen);
+}
+
+void HinhTron::hien()
+{
+    cout<<"Hinh tron co:";
+    cout<<"\n\tBan kinh: "<<r;
+    cout<<"\n\tMau nen: "<<mauNen;
+    printf("\n\tDien tich: %0.1f",3.14*r*r);
+    printf("\n\tChu vi: %0.1f",2*3.14*r);
+}
+
+float HinhTron::tinhDT()
+{
+    return 3.14*r*r;
+}
+
+float HinhTron::tinhCV()
+{
+    return 2*3.14*r;
+}
+
+int HinhTron::layMaMau()
+{
+    if(strcasecmp(mauNen,"Xanh")==0) return 0;
+    if(strcasecmp(mauNen,"Đỏ")==0) return 1;
+    if(strcasecmp(mauNen,"Tím")==0) return 2;
+    if(strcasecmp(mauNen,"Vàng")==0) return 3;
+}
+
+Bài 19(lthdtbai19.cpp): Cho điểm A(x1,y1) và điểm B(x2,y2). Tính khoảng cách AB.
+*/
+#include<iostream>
+#include<stdio.h>
+#include<math.h>
+
+using namespace std;
+
+//Khai bao lop diem trong mat phang
+class Diem
+{
+    private:
+        float x,y;
+
+    public:
+        Diem();
+        Diem(float x,float y);
+        float tinhKC(Diem &d2);
+
+        //Ham ban
+        friend istream& operator>>(istream &cin,Diem &d);
+        friend ostream& operator<<(ostream &cout,Diem &d);
+
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 2 doi Diem
+    Diem A,B;
+
+    cout<<"Nhap vao diem A:\n";
+    cin>>A;
+    cout<<"Nhap vao diem B:\n";
+    cin>>B;
+
+    cout<<"\nDiem A"<<A;
+    cout<<"\nDiem B"<<B;
+    printf("\nKhoang cach AB = %0.1f",A.tinhKC(B));
+
+    cout<<endl;
+
+    return 0;
+}
+//===dinh nghia ham===
+Diem::Diem():x(0),y(0)
+{
+
+}
+
+Diem::Diem(float x,float y):x(x),y(y)
+{
+
+}
+
+float Diem::tinhKC(Diem &d2)
+{
+    return sqrt((d2.x-x)*(d2.x-x)+(d2.y-y)*(d2.y-y));
+}
+
+//Ham ban, ham thong thuong, khong nam trong doi tuong
+istream& operator>>(istream &cin,Diem &d)
+{
+    cout<<"Nhap toa do (dang x y): ";
+    cin>>d.x>>d.y;
+
+    return cin;
+}
+
+ostream& operator<<(ostream &cout,Diem &d)
+{
+    cout<<"("<<d.x<<","<<d.y<<")";
+
+    return cout;
+}
+
+Bài 21(lthdtbai21.cpp): Tính tổng 2 ma trận nguyên: Cmxn = Amxn + Bmxn. Ma trận Amxn để trong
+tệp văn bản "matran-A.txt", ma trận Bmxn để trong tệp văn bản "matran-B.txt".
+Đưa các ma trận ra màn hình theo định dạng hàng, cột.
+Yêu cầu thêm:
+1) Sử dụng toán tử nhập >> để đọc vào ma trận từ tệp;
+2) Sử dụng toán tử xuất << để đưa ma trận ra màn hình theo định dạng hàng, cột;
+3) Sử dụng toán tử cộng + để cộng 2 ma trận và trả về ma trận tổng;
+4) Có thể tự động khởi tạo kích thước ma trận bằng 0.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong ma tran
+class MaTran
+{
+    private:
+        enum {size=10};
+        int a[size][size];
+        int m,n;
+
+    public:
+        MaTran();
+        MaTran operator+(MaTran &mt2);
+
+        //Ham ban
+        friend ifstream& operator>>(ifstream &fin,MaTran &mt);
+        friend ostream& operator<<(ostream &cout,MaTran &mt);
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 3 doi tuong ma tran
+    MaTran A,B,C;
+
+    //Tao doi tuong tep doc vao
+    ifstream finA("matran-A.txt");
+    ifstream finB("matran-B.txt");
+
+    //Doc ma tran A,B,C tu tep
+    //Doc ma tran A,B,C tu tep
+    finA>>A;
+    finB>>B;
+
+    //Cong ma tran
+    C = A + B;
+
+    //Dua ra
+    cout<<"Ma tran A:\n"<<A;
+    cout<<"\n\nMa tran B:\n"<<B;
+    cout<<"\n\nMa tran C = A + B:\n"<<C;
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+MaTran::MaTran():m(0),n(0)
+{
+
+}
+
+MaTran MaTran::operator+(MaTran &mt2)
+{
+    MaTran tong;
+
+    //Neu 2 ma tran cung kich thuoc thi cong
+    if(m==mt2.m && n==mt2.n)
+    {
+        tong.m = m;
+        tong.n = n;
+
+        for(int i=0;i<m;i++)
+            for(int j=0;j<n;j++)
+                tong.a[i][j] = a[i][j] + mt2.a[i][j];
+    }
+    else cout<<"Hai ma tran khong cung kich thuoc, khong cong duoc.";
+
+    //Tra ve ma tran tong
+    return tong;
+}
+
+//Ham ban
+ifstream& operator>>(ifstream &fin,MaTran &mt)
+{
+    //Doc so hang, so cot cua ma tran tu tep
+    fin>>mt.m>>mt.n;
+
+    //Doc cac phan tu cua ma tran tu tep
+    for(int i=0;i<mt.m;i++)
+        for(int j=0;j<mt.n;j++)
+            fin>>mt.a[i][j];
+
+    return fin;
+}
+
+ostream& operator<<(ostream &cout,MaTran &mt)
+{
+    for(int i=0;i<mt.m;i++)
+    {
+e//nua ra hang i
+        for(int j=0;j<mt.n;j++)
+            printf("%6d",mt.a[i][j]);
+
+        //Xuong dong
+        cout<<endl;
+    }
+
+    return cout;
+}
+
+Bài 23(lthdtbai23.cpp): Đọc danh sách n mặt hàng từ tệp "mathang.txt";
+mỗi mặt hàng có tên hàng, số lượng, đơn giá. Tính tổng tiền của n mặt hàng.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+#include<string.h>
+
+using namespace std;
+
+//Khai bao lop mat hang
+class MatHang
+{
+    private:
+        char tenHang[31];
+        int soLuong;
+        float donGia;
+
+    public:
+        void duaVao(const char *tenHang,int soLuong,float donGia);
+        void duaRa();
+        float tinhTien();
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao doi tuong tep vao
+    ifstream fin("mathang.txt");
+
+    //Khai bao bien
+    int n,soLuong;
+    char tenHang[31],tg[2];
+    float donGia,tongTien=0;
+
+    //Doc so luong mat hang tu tep
+    fin>>n;
+
+    //Tao mang n doi tuong mat hang de chua thong tin cua n mat hang
+    MatHang *a = new MatHang[n];
+
+    //Doc n mat hang tu tep, dua ra va tinh tong tien
+    cout<<"Danh sách mặt hàng đọc được từ tệp là:";
+    for(int i=0;i<n;i++)
+    {
+        //Doc ky tu Enter de dua con tro tep xuong dong duoi
+        fin.getline(tg,sizeof(tg));
+
+        //Doc cac thong tin cua mat hang i
+        fin.getline(tenHang,sizeof(tenHang),'\t');
+        fin>>soLuong>>donGia;
+
+        //Dua mat hang i vao doi tuong mat hang thu i
+        a[i].duaVao(tenHang,soLuong,donGia);
+
+        //Dua mat hang thu i ra man hinh
+        cout<<"\nMặt hàng thứ "<<i+1<<":\n";
+        a[i].duaRa();
+        cout<<endl;
+
+        //Tinh tong tien
+        tongTien += a[i].tinhTien();
+    }
+
+    printf("\nTổng tiền của %d mặt hàng là: %0.1f",n,tongTien);
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+void MatHang::duaVao(const char *tenHang,int soLuong,float donGia)
+{
+    strcpy(this->tenHang,tenHang);
+    this->soLuong = soLuong;
+    this->donGia = donGia;
+}
+
+void MatHang::duaRa()
+{
+    cout<<"Tên hàng: "<<tenHang;
+    cout<<"\nSố lượng: "<<soLuong;
+    cout<<"\nĐơn giá: "<<donGia;
+    cout<<"\nThành tiền: "<<soLuong*donGia;
+}
+
+float MatHang::tinhTien()
+{
+    return soLuong * donGia;
+}
+
+Bài 25(lthdtbai25.cpp): Viết chương trình nhập vào một thời gian có giờ và phút.
+Tính và đưa ra màn hình thời gian sau n phút nhập vào từ bàn phím.
+Yêu cầu thêm:
+1) Sử dụng toán tử nhập >> để nhập vào thời gian ở dạng h:m
+2) Sử dụng toán tử xuất << để đưa ra thời gian ở dạng h:mm
+3) Sử dụng toán tử cộng + để cộng thời gian với số phút n và trả về thời gian
+4) Tự động khởi tạo thời gian có giờ, phút bằng 0.
+*/
+#include<iostream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong thoi gian
+class ThoiGian
+{
+    private:
+        int gio,phut;
+
+    public:
+        ThoiGian();
+        ThoiGian operator+(int n);
+
+        //Ham ban
+        friend istream& operator>>(istream &cin,ThoiGian &tg);
+        friend ostream& operator<<(ostream &cout,ThoiGian &tg);
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao doi tuong thoi gian
+    ThoiGian bd,kt;
+
+    //Khai bao bien
+    int n;
+
+    cout<<"Nhập vào thời gian bắt đầu ";
+    cin>>bd;
+    cout<<"Nhập vào số phút n: ";
+    cin>>n;
+
+    //Tinh thoi gian sau n phut
+    kt = bd + n;
+
+    //Dua ra
+    cout<<"Thời gian sau "<<n<<" phút là: "<<kt;
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+ThoiGian::ThoiGian():gio(0),phut(0)
+{
+
+}
+
+ThoiGian ThoiGian::operator+(int n)
+{
+    ThoiGian tg;
+
+    //Cong thoi gian voi n phut de trong doi tuong tg
+    tg.gio = gio;
+    tg.phut = phut + n;
+
+    //Hieu chinh gio, phut trong tg ve dinh dang 24 gio (0<=gio<=23, 0<=phut<=59)
+    tg.gio += tg.phut/60;
+    tg.phut = tg.phut%60;
+    tg.gio = tg.gio%24;
+
+    //Tra ve thoi gian sau khi cong
+    return tg;
+}
+
+//Ham ban
+istream& operator>>(istream &cin,ThoiGian &tg)
+{
+    char kt;
+
+    cout<<"(dang h:m): ";
+    cin>>tg.gio>>kt>>tg.phut;
+
+    return cin;
+}
+
+ostream& operator<<(ostream &cout,ThoiGian &tg)
+{
+    printf("%d:%02d",tg.gio,tg.phut);
+
+    return cout;
+}
+
+Bài 29(lthdtbai29.cpp): Nhập vào một số nguyên dương, đưa ra số hex tương ứng.
+Y/c trong chương trình có sử dụng ngăn xếp để chuyển từ số thập phân sang hex.
+Ngăn xếp sử dụng cấu trúc lưu trữ phân tán với phần tử là ký tự.
+*/
+#include<iostream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong ngan xep luu tru phan tan co phan tu la ky ty
+class Stack
+{
+    private:
+        struct node
+        {
+            char infor;
+            node *link;
+        } *T;
+
+    public:
+        Stack();
+        ~Stack();
+        void push(char x);
+        char pop();
+        bool isEmpty();
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 1 doi tuong ngan xep
+    Stack s;
+
+    //Khai bao bien
+    unsigned int n,thuong,du;
+
+    cout<<"Nhập vào 1 số nguyên dương: ";
+    cin>>n;
+Bài 29(lthdtbai29.cpp): Nhập vào một số nguyên dương, đưa ra số hex tương ứng.
+Y/c trong chương trình có sử dụng ngăn xếp để chuyển từ số thập phân sang hex.
+Ngăn xếp sử dụng cấu trúc lưu trữ phân tán với phần tử là ký tự.
+*/
+#include<iostream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong ngan xep luu tru phan tan co phan tu la ky ty
+class Stack
+{
+    private:
+        struct node
+        {
+            char infor;
+            node *link;
+        } *T;
+
+    public:
+        Stack();
+        ~Stack();
+        void push(char x);
+        char pop();
+        bool isEmpty();
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 1 doi tuong ngan xep
+    Stack s;
+
+    //Khai bao bien
+    unsigned int n,thuong,du;
+
+    cout<<"Nhập vào 1 số nguyên dương: ";
+    cin>>n;
+
+    //Chuyen sang so hex
+    thuong = n;
+    while(thuong)
+    {
+        du = thuong%16;
+        thuong /= 16;
+
+        //Chuyen so du thanh chu so hex roi day vao ngan xep
+        if(du<10) s.push(du+48);
+        else s.push(du+55);
+    }
+
+    //Dua ra ket qua
+    cout<<"Số hex của "<<n<<" là: ";
+    while(!s.isEmpty()) cout<<s.pop();
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+Stack::Stack():T(NULL)
+{
+
+}
+
+Stack::~Stack()
+{
+    while(T)
+    {
+        node *P=T;
+        T = T->link;
+        delete P;
+    }
+}
+
+void Stack::push(char x)
+{
+    //1.Tao nut nho moi chua x
+    node *N = new node;
+    N->infor = x;
+    N->link = NULL;
+
+    //2.Noi nut moi vao tren nut T
+    N->link = T;
+
+    //3.Cho T tro sang nut moi
+    T = N;
+}
+
+char Stack::pop()
+{
+    //1.Kiem tra ngan xep rong
+    if(T==NULL)
+    {
+        cout<<"Ngan xep da rong";
+        return 1;
+    }
+
+    //2.Gui lai nut dinh
+    char tg = T->infor;
+    node *P = T;
+
+    //3.Cho T tro xuong nut ben duoi
+    T = T->link;
+
+    //4.Huy nut dinh va tra ve phan tu dinh da loai bo
+    delete P;
+    return tg;
+}
+
+bool Stack::isEmpty()
+{
+    return T==NULL;
+}
+
+Bài 30(lthdtbai30.cpp): Đọc vào một dãy số nguyên từ tệp văn bản, trong đó có cả số dương và số âm.
+Sử dụng hàng đợi lưu trữ kế tiếp theo kiểu quay vòng để tách, đưa ra màn hình đồng thời
+ghi ra tệp văn bản dãy các số dương và dãy các số âm.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong hang doi
+class Queue
+{
+    private:
+        enum {size=100};
+        int Q[size];
+        int F,R;
+
+    public:
+        Queue();
+        void insert(int x);
+        int remove();
+        bool isEmpty();
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 2 doi tuong hang doi
+    Queue Q1,Q2; //Q1 chua day so duong, Q2 chua day so am
+
+    //Tao doi tuong tep vao va ra
+    ifstream fin("daysonguyen.txt");
+    ofstream fout("kq-bai30.txt");
+
+    //Khai bao bien
+    int x;
+
+    //Doc day so tu tep
+    cout<<"Day so doc duoc tu tep la:\n";
+    while(fin>>x)
+    {
+        cout<<x<<"  ";
+        if(x>=0) Q1.insert(x);
+        else Q2.insert(x);
+    }
+
+    cout<<"\n\nDay cac so duong la:\n";
+    fout<<"Day cac so duong la:\n";
+    while(!Q1.isEmpty())
+    {
+        x = Q1.remove();
+        cout<<x<<"  ";
+        fout<<x<<"  ";
+    }
+
+    cout<<"\n\nDay cac so am la:\n";
+    fout<<"\n\nDay cac so am la:\n";
+    while(!Q2.isEmpty())
+    {
+        x = Q2.remove();
+        cout<<x<<"  ";
+        fout<<x<<"  ";
+    }
+
+    cout<<"\n\nKet qua cung da ghi ra tep kq-bai30.txt";
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+Queue::Queue():F(-1),R(-1)
+{
+
+}
+
+void Queue::insert(int x)
+{
+    //1.Kiem tra day
+    if(F==0 && R==size-1 || R+1==F)
+    {
+        cout<<"Hang doi da day.";
+        return;
+    }
+
+    //2.Tang R len 1
+    if(R==-1) F=R=0;
+    else if(R==size-1) R=0;
+    else R++;
+
+    //3.Dua x vao hang doi tai vi tri R
+    Q[R] = x;
+}
+
+int Queue::remove()
+{
+    //1.Kiem tra rong
+    if(F==-1)
+    {
+        cout<<"Hang doi da rong.";
+        return 1;
+    }
+
+    //2.Giu lai phan tu loi truoc (dau hang doi)
+    int tg = Q[F];
+
+    //3.Tang F len 1
+    if(F==R) F=R=-1;
+    else if(F==size-1) F=0;
+    else F++;
+
+    //4.Tra ve phan tu da loai bo
+    return tg;
+}
+
+bool Queue::isEmpty()
+{
+    return F==-1;
+}
+
+Bài 31(lthdtbai31.cpp): Cho tệp văn bản "daysonguyen-bai31.txt" chứa một dãy số nguyên,
+trên tệp không có thông tin về số lượng số. Đọc từng số của dãy số từ tệp,
+nếu là số nguyên tố thì đưa vào hàng đợi. Đưa ra màn hình dãy số đọc từ tệp và
+dãy số nguyên tố trong hàng đợi. Yêu cầu cài đặt và sử dụng hàng đợi lưu trữ phân tán.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+#include<math.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong hang doi
+class Queue
+{
+    private:
+        struct node
+        {
+            int infor;
+            node *link;
+        } *F,*R;
+
+    public:
+        Queue();
+        ~Queue();
+        void insert(int x);
+        int remove();
+        bool isEmpty();
+};
+
+//Khai bao ham thong thuong
+bool laNguyenTo(int x);
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 1 doi tuong hang doi
+    Queue Q;
+
+    //Tao 1 doi tuong tep vao
+    ifstream fin("daysonguyen-bai31.txt");
+
+    //Khai bao bien
+    int x;
+
+    //Doc day so tu tep
+    cout<<"Day so doc duoc tu tep la:\n";
+    while(fin>>x)
+    {
+        cout<<x<<"  ";
+        if(laNguyenTo(x)) Q.insert(x);
+    }
+
+    //Dua ra
+    cout<<"\n\nCac so nguyen to trong day so la:\n";
+    while(!Q.isEmpty()) cout<<Q.remove()<<"  ";
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+Queue::Queue():F(NULL),R(NULL)
+{
+
+}
+
+Queue::~Queue()
+{
+    while(F)
+    {
+        node* P=F;
+        F = F->link;
+        delete P;
+    }
+}
+
+void Queue::insert(int x)
+{
+    //1.Tao nut nho moi chua x
+    node *N = new node;
+    N->infor = x;
+    N->link = NULL;
+
+    //2.Noi nut moi vao sau nut R
+    if(R==NULL) F=N;
+    else R->link = N;
+
+    //3.Cho R tro sang nut moi
+    R = N;
+}
+
+int Queue::remove()
+{
+    //1.Kiem tra rong
+    if(F==NULL)
+    {
+        cout<<"Hang doi da rong.";
+        return 1;
+    }
+
+    //2.Giu lai phan tu loi truoc (dau hang doi)
+    int tg = F->infor;
+    node *P = F;
+
+    //3.Cho F tro sang nut tiep theo
+    F = F->link;
+
+    //4.Huy nut va tra ve phan tu da loai bo
+    delete P;
+    return tg;
+}
+
+bool Queue::isEmpty()
+{
+    return F==NULL;
+}
+
+//Ham thong thuong
+bool laNguyenTo(int x)
+{
+    //Neu x chia het cho 1 so trong khoang tu 2 den x/2 thi x ko phai la nguyen to
+    for(int i=2;i<=(int)sqrt(x);i++)
+        if(x%i==0) return 0;
+
+    //La nguyen to
+    return 1;
+}
+
+Bài 32(lthdtbai32.cpp): Cho tệp văn bản "daysonguyen-bai32.txt" chứa dãy số nguyên,
+trên tệp không có thông tin về số phần tử của dãy số. Đọc dãy số từ tệp văn bản,
+lưu dãy số trong danh sách liên kết đơn theo đúng thứ tự trên tệp.
+Đưa dãy số trong DSLKD ra màn hình. Tìm xem trong dãy số có phần tử nào bằng x không.
+Xóa một phần tử có giá trị bằng x.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong DSLKD
+class SList
+{
+    private:
+        struct node
+        {
+            int infor;
+            node *link;
+        } *F;
+
+    public:
+        SList();
+        ~SList();
+        void lastInsert(int x);
+        void display();
+        bool search(int x);
+        bool remove(int x);
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao 1 doi tuong DSLKD
+    SList list;
+
+    //Tao doi tuong tep doc vao
+    ifstream fin("daysonguyen-bai32.txt");
+
+    //Khai bao bien
+    int x;
+
+    //Doc ca day so tu tep vao DSLLK
+    while(fin>>x) list.lastInsert(x);
+
+    //Dua ra
+    cout<<"Dãy số trong DSLKD là:\n";
+    list.display();
+
+    //Tim va xoa phan tu bang x
+    cout<<"\n\nNhập vào giá trị của x: ";
+    cin>>x;
+
+    if(list.search(x))
+    {
+        //Xoa x
+        list.remove(x);
+
+        //Dua ra DSLKD
+        cout<<"\nDãy số trong DSLKD sau khi xóa phần tử bằng "<<x<<":\n";
+        list.display();
+    }
+    else cout<<"\nTrong DSLKD không có phần tử bằng "<<x;
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+SList::SList():F(NULL)
+{
+
+}
+
+SList::~SList()
+{
+    while(F)
+    {
+        node *P=F;
+        F = F->link;
+        delete P;
+    }
+}
+
+void SList::lastInsert(int x)
+{
+    //Tao nut moi chua x
+    node *N = new node;
+    N->infor = x;
+    N->link = NULL;
+
+    //Noi nut moi vao cuoi DSLKD
+    if(F==NULL) F = N;
+    else
+    {
+        //Tim den nut cuoi,P
+        node *P=F;
+        while(P->link) P = P->link;
+
+        //Noi nut moi vao sau nut cuoi
+        P->link = N;
+    }
+}
+
+void SList::display()
+{
+    node *P=F;
+    while(P)
+    {
+        cout<<P->infor<<"  ";
+        P = P->link;
+    }
+}
+
+bool SList::search(int x)
+{
+    //Tim x
+    node *P=F;
+    while(P)
+        if(P->infor==x) return 1;
+        else P = P->link;
+
+    //Khong thay phan tu bang x
+    return 0;
+}
+
+bool SList::remove(int x)
+{
+    //Tim nut M co phan tu bang x va nut P truoc nut M
+    node *M=F,*P;
+    while(M)
+        if(M->infor==x) break;
+        else
+        {
+            P = M;
+            M = M->link;
+        }
+
+    //Neu khong tim thay nut co phan tu bang x
+    if(M==NULL) return 0;
+
+    //Xoa nut M
+    P->link = M->link;
+    delete M;
+
+    //Da xoa
+    return 1;
+}
+
+Bài 35(lthdtbai35.cpp): Đọc danh sách n mặt hàng từ tệp văn bản "mathang.txt", lưu vào
+danh sách liên kết kép (DSLKK), mỗi mặt hàng có thông tin về mã hàng, tên hàng, số lượng, đơn giá.
+Đưa danh sách mặt hàng ra màn hình kèm theo số tiền của từng mặt hàng. Tính tổng số tiền của tất cả mặt hàng.
+Xóa mặt hàng có mã nhập vào từ bàn phím.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao kieu cau truc mat hang dung lam kieu phan tu cua DSLKK
+struct MatHang
+{
+    char maHang[11];
+    char tenHang[41];
+    int soLuong;
+    float donGia;
+};
+
+//Khai bao lop doi tuong danh sach lien ket kep (DSLKK)
+class DList
+{
+    private:
+        struct node
+        {
+            MatHang infor;
+            node *left,*right;
+        } *L,*R;
+
+    public:
+        DList();
+        ~DList();
+        void lastInsert(MatHang x);
+        void display();
+        float getSum();
+        bool remove(const char *maHang);
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao doi tuong tep doc vao
+    ifstream fin("mathang-bai35.txt");
+
+    //Tao 1 doi tuong DSLKK
+    DList list;
+
+    //Khai bao bien
+    MatHang x;
+    int n;
+    char tg[2];
+    char maHang[11];
+
+    //Doc so luong mat hang tu tep
+    fin>>n;
+
+    //Doc danh sach mat hang tu tep dua vao DSLKK
+    for(int i=0;i<n;i++)
+    {
+        //Doc Enter de dua con tro tep xuong dong duoi
+        fin.getline(tg,sizeof(tg));
+
+        //Doc thong tin mat hang thu i vao x
+        fin.getline(x.maHang,sizeof(x.maHang),'\t');
+        fin.getline(x.tenHang,sizeof(x.tenHang),'\t');
+        fin>>x.soLuong>>x.donGia;
+
+        //Dua mat hang x vao DSLKK
+        list.lastInsert(x);
+    }
+
+    //Dua ra danh sach mat hang
+    cout<<"Danh sách mặt hàng trong DSLKK là:";
+    list.display();
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+DList::DList():L(NULL),R(NULL)
+}
+
+DList::~DList()
+{
+    while(L)
+    {
+        node *P = L;
+        L = L->right;
+        delete P;
+    }
+}
+
+void DList::lastInsert(MatHang x)
+{
+    //Tao nut nho mo de chua x
+    node *N = new node;
+    N->infor = x;
+    N->left = N->right = NULL;
+
+    //Noi nut moi vao cuoi DSLKK (sau R)
+    if(R==NULL) L = R = N;
+    else
+    {
+        R->right = N;
+        N->left = R;
+        R = N;
+    }
+}
+
+void DList::display()
+{
+    node *P = L;
+    while(P)
+    {
+        //Dua ra ma hang
+        cout<<"\nMã hàng: "<<P->infor.maHang;
+        cout<<"\nTên hàng: "<<P->infor.tenHang;
+        cout<<"\nSố lượng: "<<P->infor.soLuong;
+        cout<<"\nĐơn giá: "<<P->infor.donGia;
+        cout<<"\nThành tiền: "<<P->infor.soLuong * P->infor.donGia<<endl;
+
+        //Cho P tro sang nut tiep theo
+        P = P->right;
+    }
+}
+
+float DList::getSum()
+{
+
+}
+
+bool DList::remove(const char *maHang)
+{
+
+}
+
+Bài 37(lthdtbai37.cpp): Tạo lớp đối tượng xâu ký tự có các đặc điểm giống như xâu ký tự
+trong Pascal: Có thể khởi tạo đối tượng xâu bằng một hằng xâu; có thể gán hằng xâu hoặc
+đối tượng xâu cho đối tượng xâu; có thể dùng phép toán + để nối xâu; có thể dùng các
+phép toán so sánh để so sánh xâu; có thể dùng cin và cout để nhập vào và đưa ra đối tượng xâu.
+*/
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+
+using namespace std;
+
+//Khai bao lop doi tuong xau ky tu
+class String
+{
+    private:
+        enum {size=256};
+        char str[size];
+
+    public:
+        String();
+        String(const char *str);
+        String operator+(String &s2);
+        bool operator>(String &s2);
+        bool operator>=(String &s2);
+        bool operator<(String &s2);
+        bool operator<=(String &s2);
+        bool operator==(String &s2);
+        bool operator!=(String &s2);
+
+        //Ham ban
+        friend istream& operator>>(istream &cin,String &s);
+        friend ostream& operator<<(ostream &cout,String &s);
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao doi tuong xau
+    String hoDem="Le Tuan ",ten="Tu",hoTen;
+
+    hoTen = hoDem + ten;
+    cout<<"Ho ten: "<<hoTen;
+    cout<<"\nHo dem: "<<hoDem;
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+String::String()
+{
+    strcpy(str,"");
+}
+
+String::String(const char *str)
+{
+    strcpy(this->str,str);
+}
+
+String String::operator+(String &s2)
+{
+    //Noi xau s2 vao cuoi xau s1
+    if(strlen(str)+strlen(s2.str)<size)
+        strcat(str,s2.str);
+
+    //Tra ve xau s1 sau khi noi
+    return *this;
+}
+
+bool String::operator>(String &s2)
+{
+    if(strcasecmp(str,s2.str)>0) return 1;
+
+    return 0;
+}
+
+bool String::operator>=(String &s2)
+{
+    if(strcasecmp(str,s2.str)>=0) return 1;
+
+    return 0;
+}
+
+bool String::operator<(String &s2)
+{
+    if(strcasecmp(str,s2.str)<0) return 1;
+
+    return 0;
+}
+
+bool String::operator<=(String &s2)
+{
+    if(strcasecmp(str,s2.str)<=0) return 1;
+
+    return 0;
+}
+
+bool String::operator==(String &s2)
+{
+    if(strcasecmp(str,s2.str)==0) return 1;
+
+    return 0;
+}
+
+bool String::operator!=(String &s2)
+{
+    if(strcasecmp(str,s2.str)!=0) return 1;
+
+    return 0;
+}
+
+//Ham ban
+istream& operator>>(istream &cin,String &s)
+{
+    scanf(" "); cin.get(s.str,sizeof(s.str));
+
+    return cin;
+}
+
+ostream& operator<<(ostream &cout,String &s)
+{
+    cout<<s.str;
+
+    return cout;
+}
+
+Bài 42(lthdtbai42.cpp): Tính diện tích các hình: Hình chữ nhật biết 2 cạnh a,b;
+hình tam giác biết 3 cạnh a,b,c; hình tròn biết bán kính r, hình trụ biết bán kính r và chiều cao h.
+Biết rằng hình trụ là một loại hình tròn có bán kính r được kéo dài với chiều cao h.
+Nhập vào một số hình, trong đó có cả hình chữ nhật, hình tam giác, hình tròn và hình trụ.
+Đưa ra diện tích các hình đã nhập. Y/c cài đặt đa hình động và lớp trừu tượng; viết 1 hàm
+lựa chọn hình, nhập kích thước cho hình và trả về hình đã nhập; viết 1 hàm đưa ra
+diện tích của một hình truyền vào qua đối số.
+*/
+#include<iostream>
+#include<stdio.h>
+#include<math.h>
+
+using namespace std;
+
+//Khai báo lớp trừu tượng cho lớp hình
+class Hinh
+{
+    private:
+
+    public:
+        virtual void nhap()=0;
+        virtual float tinhDT()=0;
+};
+
+//Khai báo lớp hình chữ nhật
+class HinhCN:public Hinh
+{
+    private:
+        float a,b;
+
+    public:
+        void nhap();
+        float tinhDT();
+};
+
+//Khai báo lớp hình tam giác
+class HinhTG:public Hinh
+{
+    private:
+        float a,b,c;
+
+    public:
+        void nhap();
+        float tinhDT();
+};
+
+//Khai báo lớp hình tròn
+class HinhTron:public Hinh
+{
+    private:
+        float r;
+
+    public:
+        void nhap();
+        float tinhDT();
+        float tinhCV();
+};
+
+//Khai báo lớp hình trụ
+class HinhTru:public HinhTron
+{
+    private:
+        float h;
+
+    public:
+        void nhap();
+        float tinhDT();
+};
+
+//Khai bao ham thong thuong
+Hinh* nhapKT();
+void hienDT(Hinh* h);
+
+//===Chuong trinh chinh===
+int main()
+{
+    //Khai bao bien
+    Hinh *dshinh[100];
+    char traLoi;
+    int n=0;
+
+    do
+    {
+        //Nhap kich thuoc
+        dshinh[n++] = nhapKT();
+
+        //Hoi co nhap tiep khong
+        cout<<"\nCo nhap tiep khong (c/k)? ";
+        cin>>traLoi;
+    }
+    while(traLoi=='c' || traLoi=='C');
+
+    //Dua ra danh sach hinh da nhap
+    cout<<"\nDien tich cac hinh da nhap la:\n";
+    for(int i=0;i<n;i++)
+    {
+        printf("\nHinh thu %d co ",i+1);
+        hienDT(dshinh[i]);
+        cout<<endl;
+    }
+
+    cout<<endl;
+    return 0;
+}
+//===Dinh nghia ham===
+//Các hàm lớp hình chữ nhật
+void HinhCN::nhap()
+{
+    cout<<"Nhap vao 2 canh hinh chu nhat: ";
+    cin>>a>>b;
+}
+
+float HinhCN::tinhDT()
+{
+    return a*b;
+}
+
+//Các hàm lớp hình tam giác
+void HinhTG::nhap()
+{
+    do
+    {
+        cout<<"Nhap vao 3 canh tam giac: ";
+        cin>>a>>b>>c;
+
+        if(a+b<=c || a+c<=b || b+c<=a)
+            cout<<"3 so da nhap khong phai 3 canh tam giac. Nhap lai.\n";
+    }
+    while(a+b<=c || a+c<=b || b+c<=a);
+}
+
+float HinhTG::tinhDT()
+{
+    float p = (a+b+c)/2;
+
+    return sqrt(p*(p-a)*(p-b)*(p-c));
+}
+
+//Các hàm lớp hình tròn
+void HinhTron::nhap()
+{
+    cout<<"Nhap vao ban kinh hinh tron: ";
+    cin>>r;
+}
+
+float HinhTron::tinhDT()
+{
+    return 3.14*r*r;
+}
+
+float HinhTron::tinhCV()
+{
+    return 2*3.14*r;
+}
+
+//Các hàm lớp hình trụ
+void HinhTru::nhap()
+{
+    //Nhập vào bán kinh r
+    HinhTron::nhap();
+
+    //Nhập chiều cao h
+    cout<<"Nhập vào chiều cao hình trụ: ";
+    cin>>h;
+}
+
+float HinhTru::tinhDT()
+{
+    return 2*HinhTron::tinhDT() + HinhTron::tinhCV()*h;
+}
+
+//Ham thong thuong
+Hinh* nhapKT()
+{
+    Hinh *h;
+    char chon;
+
+    cout<<"Lua chon hinh de nhap kich thuoc (1-TG,2-CN,3-Tron,4-Tru): ";
+    cin>>chon;
+
+    //Tao doi tuong hinh theo lua chon
+    switch(chon)
+    {
+        case '1':
+            h = new HinhTG;
+            break;
+        case '2':
+            h = new HinhCN;
+            break;
+        case '3':
+            h = new HinhTron;
+            break;
+        case '4':
+            h = new HinhTru;
+            break;
+        default:
+            h = new HinhTG;
+    }
+
+    //Dung da hinh dong de nhap kich thuoc doi tuong hinh da tao
+    h->nhap();
+
+    //Tra ve hinh da nhap kich thuoc
+    return h;
+}
+
+void hienDT(Hinh* h)
+{
+    //Dung da hinh dong de tinh va dua ra dien tinh hinh
+    printf("dien tich la: %0.1f",h->tinhDT());
+}
+
+Bài 43(lthdtbai43.cpp): Viết chương trình quản lý nhân sự của một trường học;
+nhân sự gồm có giảng viên và sinh viên; giảng viên có mã gv, họ tên và số bài báo;
+sinh viên có mã sv, họ tên và điểm tbc. Nhập vào một số nhân sự trong đó có cả giảng viên
+và sinh viên. Đưa ra thông tin của các nhân sự đã nhập kèm theo đánh giá:
+giảng viên đánh giá là giỏi nếu số bài báo >=5, sinh viên đánh giá là giỏi
+nếu điểm TBC>=8.0. Y/c cài đặt đa hình động.
+Yêu cầu thêm:
+1) Viết một hàm lựa chọn loại nhân sự cần nhập thông tin, nhập thông tin cho nhân sự
+    và trả về nhân sự đã nhập thông tin;
+2) Viết một hàm đưa ra thông tin của nhân sự truyền vào qua đối số.
+*/
+#include<iostream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao lop nhan su
+class NhanSu
+{
+    private:
+        char hoTen[36];
+
+    public:
+        virtual void nhap();
+        virtual void hien();
+};
+
+//Khai bao lop giang vien
+class GiangVien:public NhanSu
+{
+    private:
+        char maGV[11];
+        int soBB;
+
+    public:
+        void nhap();
+        void hien();
+};
+
+//Khai bao lop sinh vien
+class SinhVien:public NhanSu
+{
+    private:
+        char maSV[11];
+        float diemTBC;
+
+    public:
+        void nhap();
+        void hien();
+};
+
+//Khai bao ham thong thuong
+NhanSu* nhapTT();
+void hienTT(NhanSu *x);
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao mang con tro lop co so nhan su
+    NhanSu *ds[100];
+
+    //Khai bao bien
+    int n=0;
+    char traLoi;
+
+    do
+    {
+        //Nhap thong tin
+        ds[n++] = nhapTT();
+
+        //Hoi co nhap tiep ko
+        cout<<"\nCo nhap tiep khong(c/k)? ";
+        cin>>traLoi;
+    }
+    while(traLoi=='c' || traLoi=='C');
+
+    //Dua ra danh sach nhan su da nhap
+    cout<<"\nDanh sach nhan su da nhap la:";
+    for(int i=0;i<n;i++)
+    {
+        cout<<"\nNhan su thu "<<i+1<<":";
+        hienTT(ds[i]);
+        cout<<endl;
+    }
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+//Ham lop nhan su
+void NhanSu::nhap()
+{
+    cout<<"Nhap vao ho ten: ";
+    scanf(" "); cin.get(hoTen,sizeof(hoTen));
+}
+
+void NhanSu::hien()
+{
+    cout<<"\nHo ten: "<<hoTen;
+}
+
+//Ham lop giang vien
+void GiangVien::nhap()
+{
+    cout<<"Nhap ma giang vien: ";
+    cin>>maGV;
+
+    //Nhap ho ten
+    NhanSu::nhap();
+
+    cout<<"Nhap so bai bao: ";
+    cin>>soBB;
+}
+
+void GiangVien::hien()
+{
+    cout<<"\nMa giang vien: "<<maGV;
+
+    //Hien ho ten
+    NhanSu::hien();
+
+    cout<<"\nSo bai bao: "<<soBB;
+    if(soBB>=5) cout<<"\nDanh gia: Giang vien gioi.";
+}
+
+//Ham lop sinh vien
+void SinhVien::nhap()
+{
+    cout<<"Nhap ma sinh vien: ";
+    cin>>maSV;
+
+    //Nhap ho ten
+    NhanSu::nhap();
+
+    cout<<"Nhap diem TBC: ";
+    cin>>diemTBC;
+}
+
+void SinhVien::hien()
+{
+    cout<<"\nMa sinh vien: "<<maSV;
+
+    //Hien ho ten
+    NhanSu::hien();
+
+    cout<<"\nDiem TBC: "<<diemTBC;
+    if(diemTBC>=8) cout<<"\nDanh gia: Sinh vien gioi.";
+}
+
+//Ham thong thuong
+NhanSu* nhapTT()
+{
+    NhanSu *ns;
+    char chon;
+
+    //Lay lua chon
+    cout<<"Lua chon loai nhan su can nhap thong tin (1-GV,2-SV): ";
+    cin>>chon;
+
+    //Tao doi tuong nhan su theo lua chon
+    if(chon=='1') ns = new GiangVien;
+    else ns = new SinhVien;
+
+    //Dung da hinh donh de nhap thong tin cho doi tuong da tao
+    ns->nhap();
+
+    //Tra ve nhan su da nhap thong tin
+    return ns;
+}
+
+void hienTT(NhanSu *x)
+{
+    //Dung da hinh dong de dua ra thong tin cua nhan su
+    x->hien();
+}
