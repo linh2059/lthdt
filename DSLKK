@@ -1,0 +1,136 @@
+Bài 35(lthdtbai35.cpp): Đọc danh sách n mặt hàng từ tệp văn bản "mathang.txt", lưu vào
+danh sách liên kết kép (DSLKK), mỗi mặt hàng có thông tin về mã hàng, tên hàng, số lượng, đơn giá.
+Đưa danh sách mặt hàng ra màn hình kèm theo số tiền của từng mặt hàng. Tính tổng số tiền của tất cả mặt hàng.
+Xóa mặt hàng có mã nhập vào từ bàn phím.
+*/
+#include<iostream>
+#include<fstream>
+#include<stdio.h>
+
+using namespace std;
+
+//Khai bao kieu cau truc mat hang dung lam kieu phan tu cua DSLKK
+struct MatHang
+{
+    char maHang[11];
+    char tenHang[41];
+    int soLuong;
+    float donGia;
+};
+
+//Khai bao lop doi tuong danh sach lien ket kep (DSLKK)
+class DList
+{
+    private:
+        struct node
+        {
+            MatHang infor;
+            node *left,*right;
+        } *L,*R;
+
+    public:
+        DList();
+        ~DList();
+        void lastInsert(MatHang x);
+        void display();
+        float getSum();
+        bool remove(const char *maHang);
+};
+
+//===chuong trinh chinh===
+int main()
+{
+    //Tao doi tuong tep doc vao
+    ifstream fin("mathang-bai35.txt");
+
+    //Tao 1 doi tuong DSLKK
+    DList list;
+
+    //Khai bao bien
+    MatHang x;
+    int n;
+    char tg[2];
+    char maHang[11];
+
+    //Doc so luong mat hang tu tep
+    fin>>n;
+
+    //Doc danh sach mat hang tu tep dua vao DSLKK
+    for(int i=0;i<n;i++)
+    {
+        //Doc Enter de dua con tro tep xuong dong duoi
+        fin.getline(tg,sizeof(tg));
+
+        //Doc thong tin mat hang thu i vao x
+        fin.getline(x.maHang,sizeof(x.maHang),'\t');
+        fin.getline(x.tenHang,sizeof(x.tenHang),'\t');
+        fin>>x.soLuong>>x.donGia;
+
+        //Dua mat hang x vao DSLKK
+        list.lastInsert(x);
+    }
+
+    //Dua ra danh sach mat hang
+    cout<<"Danh sách mặt hàng trong DSLKK là:";
+    list.display();
+
+    cout<<endl;
+    return 0;
+}
+//===dinh nghia ham===
+DList::DList():L(NULL),R(NULL)
+}
+
+DList::~DList()
+{
+    while(L)
+    {
+        node *P = L;
+        L = L->right;
+        delete P;
+    }
+}
+
+void DList::lastInsert(MatHang x)
+{
+    //Tao nut nho mo de chua x
+    node *N = new node;
+    N->infor = x;
+    N->left = N->right = NULL;
+
+    //Noi nut moi vao cuoi DSLKK (sau R)
+    if(R==NULL) L = R = N;
+    else
+    {
+        R->right = N;
+        N->left = R;
+        R = N;
+    }
+}
+
+void DList::display()
+{
+    node *P = L;
+    while(P)
+    {
+        //Dua ra ma hang
+        cout<<"\nMã hàng: "<<P->infor.maHang;
+        cout<<"\nTên hàng: "<<P->infor.tenHang;
+        cout<<"\nSố lượng: "<<P->infor.soLuong;
+        cout<<"\nĐơn giá: "<<P->infor.donGia;
+        cout<<"\nThành tiền: "<<P->infor.soLuong * P->infor.donGia<<endl;
+
+        //Cho P tro sang nut tiep theo
+        P = P->right;
+    }
+}
+
+float DList::getSum()
+{
+
+}
+
+bool DList::remove(const char *maHang)
+{
+
+}
