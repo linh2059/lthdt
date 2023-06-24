@@ -1,0 +1,92 @@
+ 5 /*
+  6 Viết chương trình nhập vào danh sách sinh viên cho tới khi không muốn nhập thì thôi,
+  7 mỗi sinh viên có thông tin về mã sinh viên, tên và điểm tbc. Mã SV là các số nguyên
+  8 được lấy tự động có giá trị từ 11 trở đi. Đưa ra màn hình số lượng và danh sách
+  9 sinh viên đã nhập. Yêu cầu trong chương trình có sử dụng
+ 10 biến chung và hàm chung, sử dụng đối tượng động.
+ 11 */
+ 12 #include<iostream>
+ 13 #include<stdio.h>
+ 14
+ 15 using namespace std;
+ 16
+ 17 //Khai bao lop sinh vien
+ 18 class SinhVien
+ 19 {
+ 20     private:
+ 21         int maSV;
+ 22         char ten[8];
+ 23         float diemTBC;
+ 24         static int stt;
+ 25
+ 26     public:
+ 27         void nhap();
+ 28         void hien();
+ 29         static int laySL();
+ 30 };
+ 31
+ 32 //Dinh nghia bien cua lop
+ 33 int SinhVien::stt=10;
+ 34
+ 35 //===chuong trinh chinh===
+ 36 int main()
+ 37 {
+ 38     //Khai bao bien
+ 39     SinhVien *ds[100];
+ 40     char traLoi;
+ 41     int i=0,n;
+ 42
+ 43     //Nhap
+ 44     do
+ 45     {
+ 46         //Tao doi tuong sinh vien
+ 47         ds[i] = new SinhVien;
+ 48
+ 49         //Nhap thong tin
+ 50         ds[i++]->nhap();
+ 51
+ 52         //Hoi
+ 53         cout<<"\nCo nhap tiep khong(c/k)? ";
+ 54         cin>>traLoi;
+ 55     }
+ 56     while(traLoi=='c' || traLoi=='C');
+ 57
+ 58     //Lay so luong sv da nhap
+ 59     n = SinhVien::laySL();
+ 60
+ 61     //Dua ra
+ 62     cout<<"\n\nDa nhap "<<n<<" sinh vien";
+ 63     cout<<"\nDanh sach sinh vien da nhap la:\n\n";
+ 64     for(i=0;i<n;i++)
+ 65     {
+ 66         ds[i]->hien();
+ 67         cout<<"\n\n";
+ 68     }
+ 69
+ 70     cout<<endl;
+ 71     return 0;
+ 72 }
+ 73 //===dinh nghia ham===
+ 74 void SinhVien::nhap()
+ 75 {
+ 76     //Tao ma sinh vien tu dong tu bien tinh stt
+ 77     maSV = ++stt;
+ 78     cout<<"Ma sinh vien: "<<maSV;
+ 79
+ 80     //Nhap
+ 81     cout<<"\nNhap vao ten sinh vien: "; cin>>ten;
+ 82     cout<<"Diem TBC: "; cin>>diemTBC;
+ 83 }
+ 84
+ 85 void SinhVien::hien()
+ 86 {
+ 87     cout<<"Ma sinh vien: "<<maSV;
+ 88     cout<<"\nTen sinh vien: "<<ten;
+ 89     cout<<"\nDiem TBC: "<<diemTBC;
+ 90 }
+ 91
+ 92 int SinhVien::laySL()
+ 93 {
+ 94     return stt-10;
+ 95 }
+ 96
