@@ -1,0 +1,113 @@
+  5 /*
+  6 Bài tập (lthdt-sophuc3.cpp): Tính tổng hai số phức.
+  7 Yêu cầu:
+  8 1) Sử dụng toán tử cộng + để cộng 2 số phức.
+  9 2) Sử dụng toán tử nhập >> để nhập vào số phức.
+ 10 3) Sử dụng toán tử xuất << để đưa số phức ra màn hình ở dạng a + jb.
+ 11 4) Viết hàm tạo không đối số để khởi tạo phần thực, phần ảo bằng 0
+ 12 5) Viết hàm tạo một đối số để khởi tạo phần thực bằng đối số, phần ảo bằng 0
+ 13 6) Viết hàm tạo 2 đối số để khởi tạo phần thực và phần ảo bằng đối số
+ 14 7) Viết hàm tạo sao chép
+ 15 8) Viết hàm hủy
+ 16 Trong thân các hàm tạo, hàm tạo sao chép và hàm hủy có lệnh đưa ra thông báo để biết
+ 17 là hàm đã thực hiện.
+ 18 */
+ 19 #include<iostream>
+ 20 #include<stdio.h>
+ 21
+ 22 using namespace std;
+ 23
+ 24 //Khai bao lop so phuc
+ 25 class SoPhuc
+ 26 {
+ 27     private:
+ 28         float a,b;
+ 29
+ 30     public:
+ 31         SoPhuc();
+ 32         SoPhuc(float a);
+ 33         SoPhuc(float a,float b);
+ 34         ~SoPhuc();
+ 35         SoPhuc(SoPhuc &p);
+ 36
+ 37         SoPhuc operator+(SoPhuc p2);
+ 38
+ 39         //Ham ban
+ 40         friend istream& operator>>(istream &cin,SoPhuc &p);
+ 41         friend ostream& operator<<(ostream &cout,SoPhuc &p);
+ 42 };
+ 43
+ 44 //===chuong trinh chinh===
+ 45 int main()
+ 46 {
+ 47     //Tao 3 doi tuong so phuc;
+ 48     SoPhuc p1(2.5),p2(3,-8),tong;
+ 49
+ 50     cout<<"Nhap vao so phuc p1:\n";
+ 51     cin>>p1; //Uoc gi cin>>p1;
+ 52     cout<<"Nhap vao so phuc p2:\n";
+ 53     cin>>p2;
+ 54
+ 55     //Cong 2 so phuc
+ 56     tong = p1 + p2;
+ 57
+ 58     //Dua ra
+ 59     cout<<"\nSo phuc p1: "; cout<<p1;
+ 60     cout<<"\nSo phuc p2: "; cout<<p2;
+ 61     cout<<"\nSo phuc p1 + p2: "; cout<<tong;
+ 62
+ 63     cout<<endl;
+ 64     return 0;
+ 65 }
+ 66 //===dinh nghia ham===
+ 67 SoPhuc::SoPhuc():a(0),b(0)
+ 68 {
+ 69     cout<<"\nHam tao khong doi so da thuc hien.";
+ 70 }
+ 71
+ 72 SoPhuc::SoPhuc(float a):a(a),b(0)
+ 73 {
+ 74     cout<<"\nHam tao 1 doi so da thuc hien.";
+ 75 }
+ 76
+ 77 SoPhuc::SoPhuc(float a,float b):a(a),b(b)
+ 78 {
+ 79     cout<<"\nHam tao 2 doi so da thuc hien.";
+ 80 }
+ 81
+ 82 SoPhuc::~SoPhuc()
+ 83 {
+ 84     cout<<"\nHam huy da thuc hien.";
+ 85 }
+ 86
+ 87 SoPhuc::SoPhuc(SoPhuc &p):a(p.a),b(p.b)
+ 88 {
+ 89     cout<<"\nHam tao sao chep da thuc hien.";
+ 90 }
+ 91
+ 92 SoPhuc SoPhuc::operator+(SoPhuc p2)
+ 93 {
+ 94     SoPhuc tg;
+ 95
+ 96     tg.a = a + p2.a;
+ 97     tg.b = b + p2.b;
+ 98
+ 99     return tg;
+100 }
+101
+102 //Ham ban, ham thong thuong, khong phai ham thanh vien cua lop
+103 istream& operator>>(istream &cin,SoPhuc &p)
+104 {
+105     cout<<"Nhap vao phan thuc: "; cin>>p.a;
+106     cout<<"Nhap vao phan ao: "; cin>>p.b;
+107
+108     return cin;
+109 }
+110
+111 ostream& operator<<(ostream &cout,SoPhuc &p)
+112 {
+113     if(p.b>=0) cout<<p.a<<" + j"<<p.b;
+114     else cout<<p.a<<" - j"<<-p.b;
+115
+116     return cout;
+117 }
