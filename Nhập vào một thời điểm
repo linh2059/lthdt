@@ -1,0 +1,145 @@
+ /*
+  6 Bài tập (lthdt-kethuaboi.cpp): Thời điểm là một loại ngày tháng và cũng là một loại thời gian
+  7 nhưng có thêm địa điểm. Ngày tháng có ngày, tháng, năm. Thời gian có giờ và phút. Nhập vào
+  8 một thời điểm, đưa ra thời điểm đó ở dạng Địa điểm, dd/mm/yy - h:mm. Ví dụ: Hà Nội, 30/09/19 – 14:27
+  9 Y/c viết hàm tạo không có đối số và có đối số cho tất cả các lớp.
+ 10 */
+ 11
+ 12 #include<iostream>
+ 13 #include<stdio.h>
+ 14 #include<string.h>
+ 15
+ 16 using namespace std;
+ 17
+ 18 //Khai bao lop doi tuong ngay thang
+ 19 class NgayThang
+ 20 {
+ 21     private:
+ 22         int ngay,thang,nam;
+ 23
+ 24     public:
+ 25         NgayThang();
+ 26         NgayThang(int ngay,int thang,int nam);
+ 27         void nhap();
+ 28         void hien();
+ 29 };
+ 30
+ 31 //Khai bao lop doi tuong thoi gian
+ 32 class ThoiGian
+ 33 {
+ 34     private:
+ 35         int gio,phut;
+ 36
+ 37     public:
+ 38         ThoiGian();
+ 39         ThoiGian(int gio,int phut);
+ 40         void nhap();
+ 41         void hien();
+ 42 };
+ 43
+ 44 //Khai bao lop doi tuong thoi diem
+ 45 class ThoiDiem:public NgayThang,public ThoiGian
+ 46 {
+ 47     private:
+ 48         char diaDiem[31];
+ 49
+ 50     public:
+ 51         ThoiDiem();
+ 52         ThoiDiem(int ngay,int thang,int nam,int gio,int phut,const char *diaDiem);
+ 53         void nhap();
+ 54         void hien();
+ 55 };
+ 56
+ 57 //===Chuong trinh chinh===
+ 58 int main()
+ 59 {
+ 60     //Tao 1 doi tuong thoi diem
+ 61     ThoiDiem td;
+ 62
+ 63     cout<<"Nhap vao mot thoi diem:\n";
+ 64     td.nhap();
+ 65
+ 66     cout<<"Thoi diem da nhap la: ";
+ 67     td.hien();
+ 68
+ 69     cout<<endl;
+ 70     return 0;
+ 71 }
+ 72 //===Dinh nghia ham===
+ 73 NgayThang::NgayThang():ngay(0),thang(0),nam(0)
+ 74 {
+ 75
+ 76 }
+ 77
+ 78 NgayThang::NgayThang(int ngay,int thang,int nam):ngay(ngay),thang(thang),nam(nam)
+ 79 {
+ 80
+ 81 }
+ 82
+ 83 void NgayThang::nhap()
+ 84 {
+ 85     char kt;
+ 86
+ 87     cout<<"dang (dd/mm/yy): ";
+ 88     cin>>ngay>>kt>>thang>>kt>>nam;
+ 89 }
+ 90
+ 91 void NgayThang::hien()
+ 92 {
+ 93     printf("%02d/%02d/%d",ngay,thang,nam);
+ 94 }
+ 95
+ 96 ThoiGian::ThoiGian():gio(0),phut(0)
+ 97 {
+ 98
+ 99 }
+100
+101 ThoiGian::ThoiGian(int gio,int phut):gio(gio),phut(phut)
+102 {
+103
+104 }
+105
+106 void ThoiGian::nhap()
+107 {
+108     char kt;
+109
+110     cout<<"(dang h:mm): ";
+111     cin>>gio>>kt>>phut;
+112 }
+113
+114 void ThoiGian::hien()
+115 {
+116     printf("%d:%02d",gio,phut);
+117 }
+118
+119 ThoiDiem::ThoiDiem():NgayThang(),ThoiGian()
+120 {
+121     strcpy(diaDiem,"");
+122 }
+123
+124 ThoiDiem::ThoiDiem(int ngay,int thang,int nam,int gio,int phut,const char *diaDiem):NgayThang(ngay,thang,nam),ThoiGian(gio,phut)
+125 {
+126     strcpy(this->diaDiem,diaDiem);
+127 }
+128
+129 void ThoiDiem::nhap()
+130 {
+131     cout<<"Nhap vao dia diem: ";
+132     scanf(" "); cin.get(diaDiem,sizeof(diaDiem));
+133
+134     //Nhap vao ngay thang
+135     cout<<"Nhap ngay thang ";
+136     NgayThang::nhap();
+137
+138     //Nhap vao thoi gian
+139     cout<<"Nhap thoi gian ";
+140     ThoiGian::nhap();
+141 }
+142
+143 void ThoiDiem::hien()
+144 {
+145     cout<<diaDiem<<", ";
+146     NgayThang::hien();
+147     cout<<" - ";
+148     ThoiGian::hien();
+149 }
